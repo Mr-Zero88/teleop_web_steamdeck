@@ -10,7 +10,7 @@ export default class AsyncRosBridge extends ROSLIB.Ros {
     constructor(url: string) {
         super({url});
         this.ready = new Promise((resolve, reject) => {
-            this.on("connection", () => resolve(this));
+            this.on("connection", () => setTimeout(() => resolve(this), 100));
             this.on("error", () => reject(new RosBridgeError()));
             this.on("close", () => reject(new RosBridgeClosed()));
             this.connect(url);

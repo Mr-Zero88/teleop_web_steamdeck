@@ -29,7 +29,7 @@ interface TwistStamped {
     twist: Twist;
 }
 
-interface Header extends ROSLIB.std_msgs.ROS1Header {
+export interface Header extends ROSLIB.std_msgs.ROS1Header {
     
 }
 

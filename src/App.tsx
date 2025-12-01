@@ -5,7 +5,12 @@ import setup from '.'
 import type TurtleBot from './turtleBot';
 
 function App() {
-  const [url, setUrl] = useState(`ws://${location.hostname}:9090`);
+  let defaultURL = `ws://${location.hostname}:9090`;
+  const urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.has('ws')) {
+    defaultURL = `ws://${urlParams.get('ws')}`;
+  }
+  const [url, setUrl] = useState(defaultURL);
   const [connected, setConnected] = useState(false);
   const [battery, setBattery] = useState(0);
   const [error, setError] = useState<string | null>(null);
