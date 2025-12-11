@@ -1,9 +1,11 @@
 import * as ROSLIB from "roslib";
 import AsyncRosBridge from "./rosBridge";
+import type { ITwistStamped } from "@ros2/geometry_msgs";
+import type { IBatteryState } from "@ros2/std_msgs";
 
 export default class TurtleBot extends AsyncRosBridge {
-    public cmdVel: ROSLIB.Topic<TwistStamped>;
-    public batteryState: ROSLIB.Topic<BatteryState>;
+    public cmdVel: ROSLIB.Topic<ITwistStamped>;
+    public batteryState: ROSLIB.Topic<IBatteryState>;
 
     constructor(url: string) {
         super(url);
@@ -18,22 +20,4 @@ export default class TurtleBot extends AsyncRosBridge {
             messageType: "sensor_msgs/BatteryState",
         });
     }
-}
-
-interface BatteryState {
-    percentage: number;
-}
-
-interface TwistStamped {
-    header: Header;
-    twist: Twist;
-}
-
-export interface Header extends ROSLIB.std_msgs.ROS1Header {
-    
-}
-
-interface Twist {
-    linear: ROSLIB.geometry_msgs.Vector3;
-    angular: ROSLIB.geometry_msgs.Vector3;
 }

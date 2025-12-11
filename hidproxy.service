@@ -1,0 +1,17 @@
+[Unit]
+Description=HID Proxy Service
+After=network.target
+
+[Service]
+Type=simple
+User=deck
+WorkingDirectory=/home/deck/git/hidproxy
+ExecStart=/bin/bash -c 'source /home/deck/.bashrc && pnpm start'
+Restart=on-failure
+RestartSec=10
+
+StandardOutput=append:/home/deck/hidproxy.out
+StandardError=append:/home/deck/hidproxy.err
+
+[Install]
+WantedBy=multi-user.target
