@@ -2,10 +2,12 @@ import * as ROSLIB from "roslib";
 import AsyncRosBridge from "./rosBridge";
 import type { ITwistStamped } from "@ros2/geometry_msgs";
 import type { IBatteryState } from "@ros2/std_msgs";
+import type { IImage } from "@ros2/sensor_msgs";
 
 export default class TurtleBot extends AsyncRosBridge {
     public cmdVel: ROSLIB.Topic<ITwistStamped>;
     public batteryState: ROSLIB.Topic<IBatteryState>;
+    public image: ROSLIB.Topic<IImage>;
 
     constructor(url: string) {
         super(url);
@@ -18,6 +20,11 @@ export default class TurtleBot extends AsyncRosBridge {
             ros: this,
             name: "/battery_state",
             messageType: "sensor_msgs/BatteryState",
+        });
+        this.image = new ROSLIB.Topic({
+            ros: this,
+            name: "/image",
+            messageType: "sensor_msgs/Image",
         });
     }
 }
