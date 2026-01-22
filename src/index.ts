@@ -3,38 +3,37 @@ import TurtleBot from "./turtleBot";
 import * as ROSLIB from "roslib";
 // import AsyncWebSocket from "./websocket";
 
-// /// <reference path='types/ros2d.d.ts'/>
-// import * as ROS2D from './ros2d.ts';
+/// <reference path='types/ros2d.d.ts'/>
+import * as ROS2D from './ros2d.js';
 
-import { OccupancyGrid } from "./ros2d.ts";
+// import { OccupancyGrid } from "./ros2d.ts";
 
 export default async function setup(url: string) {
     let steamdeck = await new Steamdeck('ws://localhost:7000').ready.catch(e => e);
     if(steamdeck instanceof Error) throw new Error("Faild to create steamdeck", {cause: steamdeck});
     let turtleBot = await new TurtleBot(url).ready.catch((e: Error) => e);
     if(turtleBot instanceof Error) throw new Error("Faild to connect to ros2 bridge", {cause: turtleBot});
-    let occupancyGrid = new OccupancyGrid({
-        ros: turtleBot
+    // let occupancyGrid = new OccupancyGrid({
+    //     ros: turtleBot
+    // });
+    
+    var viewer = new ROS2D.Viewer({
+        divID : 'map',
+        width : 525,
+        height : 700
+    });
+     var gridClient = new ROS2D.OccupancyGridClient({
+      ros : turtleBot,
+      rootObject : viewer.scene,
+      topic: "/map",
+      continuous: true
+    });
+    // Scale the canvas to fit to the map
+    gridClient.on('change', function() {
+      viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
+      viewer.shift(gridClient.currentGrid.pose.position.x, gridClient.currentGrid.pose.position.y);
     });
     
-    // var viewer = new ROS2D.Viewer({
-    //     divID : 'map',
-    //     width : 600,
-    //     height : 500
-    // });
-    //  var gridClient = new ROS2D.OccupancyGridClient({
-    //   ros : turtleBot,
-    //   rootObject : viewer.scene,
-    //   topic: "/map",
-    //   continuous: true
-    // });
-    // // Scale the canvas to fit to the map
-    // gridClient.on('change', function() {
-    //   viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
-    //   viewer.shift(gridClient.currentGrid.pose.position.x, gridClient.currentGrid.pose.position.y);
-    // });
-    // let websocket = await new AsyncWebSocket(url).ready.catch(e => e);
-    // if(websocket instanceof Error) throw new Error("Faild to connect to ros2 relay", {cause: websocket});
     let linear_speed = 0.1;
     let linear_velocity = 0;
     let angular_speed = -1;
